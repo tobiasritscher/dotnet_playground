@@ -1,2 +1,2 @@
 # dotnet_playground
-a testenvironment for c# with dotnet and unittests
+a testenvironment for c# with dotnet core and unittests
