@@ -10,7 +10,7 @@ namespace GradeBook.Tests
         public void BookCalculatesStatistics()
         {
             //arrange
-            var book = new Book(new List<double> {89.1, 90.5, 77.3});
+            var book = new InMemoryBook(new List<double> {89.1, 90.5, 77.3});
 
             //act
             var results = book.GetStatistics();

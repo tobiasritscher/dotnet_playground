@@ -8,10 +8,24 @@ namespace GradeBook
     {
         static void Main(string[] args)
         {
-            var gradeBook = new Book(stringArrayToDoubleList(args));
+            var gradeBook = new InMemoryBook(stringArrayToDoubleList(args));
+            gradeBook.GradeAdded += OnGradeAdded;
+            InputGrades(gradeBook);
 
+            try
+            {
+                Console.WriteLine(gradeBook.ToString());
+            }
+            catch
+            {
+                Console.WriteLine("No Data!");
+            }
+        }
+
+        private static void InputGrades(IBook gradeBook)
+        {
             var input = "q";
-            do 
+            do
             {
                 Console.WriteLine("Please Enter a grade [0-100] or 'q' to quit: ");
                 input = Console.ReadLine();
@@ -28,17 +42,6 @@ namespace GradeBook
                     }
                 }
             } while (input != "q");
-
-            try
-            {
-                var statistics = gradeBook.GetStatistics(); 
-                Console.WriteLine($"The Book \"{gradeBook.GetName()}\" contains {statistics.GradeCount} grades.");
-                Console.WriteLine($"Avarage grade: {statistics.Average:N2}\nMinimum grade: {statistics.Low:N2}\nMaximum grade: {statistics.High:N2}\nLetter grade: {statistics.Letter}"); 
-            }
-            catch
-            {
-                Console.WriteLine("No Data!");
-            }
         }
 
         static private List<double> stringArrayToDoubleList(string[] strings)
@@ -58,6 +61,11 @@ namespace GradeBook
             }
 
             return grades;
+        }
+
+        static void OnGradeAdded(object sender, EventArgs e)
+        {
+            Console.WriteLine("A grade was added");
         }
     }
 }
