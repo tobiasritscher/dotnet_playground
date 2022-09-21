@@ -10,17 +10,34 @@ namespace GradeBook
         {
             var gradeBook = new Book(stringArrayToDoubleList(args));
 
-            gradeBook.AddGrade(56.1);
+            var input = "q";
+            do 
+            {
+                Console.WriteLine("Please Enter a grade [0-100] or 'q' to quit: ");
+                input = Console.ReadLine();
 
-            if (args.Length > 0)
+                if (input != "q")
+                {
+                    try
+                    {
+                        gradeBook.AddGrade(Convert.ToDouble(input));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Error: {e.Message}");
+                    }
+                }
+            } while (input != "q");
+
+            try
             {
                 var statistics = gradeBook.GetStatistics(); 
                 Console.WriteLine($"The Book \"{gradeBook.GetName()}\" contains {statistics.GradeCount} grades.");
-                Console.WriteLine($"Avarage grade: {statistics.Average:N2}\nMinimum grade: {statistics.Low:N2}\nMaximum grade: {statistics.High:N2}"); 
+                Console.WriteLine($"Avarage grade: {statistics.Average:N2}\nMinimum grade: {statistics.Low:N2}\nMaximum grade: {statistics.High:N2}\nLetter grade: {statistics.Letter}"); 
             }
-            else
+            catch
             {
-                Console.WriteLine("Hello!");
+                Console.WriteLine("No Data!");
             }
         }
 

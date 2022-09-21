@@ -20,6 +20,7 @@ namespace GradeBook.Tests
             Assert.Equal(90.5, results.High, 1);
             Assert.Equal(77.3, results.Low, 1);
             Assert.Equal(3, results.GradeCount);
+            Assert.Equal('B', results.Letter);
         }
     }
 }
