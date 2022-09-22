@@ -11,7 +11,7 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/src/GradeBook/bin/Debug/net6.0/GradeBook.dll",
-            "args": ["12.7dre", "10.3", "6.11", "4.1"],
+            "args": ["Disk"],
             "cwd": "${workspaceFolder}/src/GradeBook",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",

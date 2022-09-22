@@ -8,7 +8,15 @@ namespace GradeBook
     {
         static void Main(string[] args)
         {
-            var gradeBook = new InMemoryBook(stringArrayToDoubleList(args));
+            IBook gradeBook;
+            if (args[0] == "Disk")
+            {
+                gradeBook = new DiskBook("My New Disk Book");
+            }
+            else
+            {
+                gradeBook = new InMemoryBook("My New Memory Book");
+            }
             gradeBook.GradeAdded += OnGradeAdded;
             InputGrades(gradeBook);
 

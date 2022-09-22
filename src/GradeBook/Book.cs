@@ -31,22 +31,66 @@ namespace GradeBook
         }
 
         public abstract event GradeAddedDelegate GradeAdded;
-
         public abstract void AddGrade(double grade);
-
         public virtual BookStatistics GetStatistics()
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            var statistics = GetStatistics();
+
+            return $"The Book \"{Name}\" contains {statistics.GradeCount} grades.\n" +
+            $"Avarage grade: {statistics.Average:N2}\nMinimum grade: {statistics.Low:N2}\nMaximum grade: {statistics.High:N2}\nLetter grade: {statistics.Letter}";
+        }
+    }
+
+    public class DiskBook : Book
+    {
+        public DiskBook(string name) : base(name)
+        {
+        }
+
+        public override event GradeAddedDelegate? GradeAdded = null;
+
+        public override void AddGrade(double grade)
+        {
+            using(var fileWriter = File.AppendText(Name + ".txt"))
+            {
+                fileWriter.WriteLine(grade);
+
+                if (GradeAdded != null) {
+                    GradeAdded(this, new EventArgs());
+                }
+            }
+        }
+
+        public override BookStatistics GetStatistics()
+        {
+            BookStatistics statistics = new BookStatistics();
+            
+            var grades = new List<double>();
+
+            using(var reader = File.OpenText(Name + ".txt"))
+            {
+                var line = reader.ReadLine();
+                while (line != null)
+                {
+                    grades.Add(Convert.ToDouble(line));
+                    line = reader.ReadLine();
+                }
+            }
+
+            statistics.CalculateStatistics(grades);
+
+            return statistics;
         }
     }
 
     public class InMemoryBook : Book
     {
         public override event GradeAddedDelegate? GradeAdded = null;
-
-        readonly string category = "science";
-        public const string IDENTIFIER = "CH12434";
-
 
         private List<double> grades;
         private static int bookCount = 0;
@@ -108,52 +152,9 @@ namespace GradeBook
         public override BookStatistics GetStatistics()
         {
             BookStatistics statistics = new BookStatistics();
-
-            statistics.GradeCount = grades.Count;
-            statistics.Average = CalculateSumOfGrades() / statistics.GradeCount;
-            statistics.High = grades.Max();
-            statistics.Low = grades.Min();
-
-            switch(statistics.Average)
-            {
-                case var d when d >= 90.0:
-                    statistics.Letter = 'A';
-                    break;
-                case var d when d >= 80.0:
-                    statistics.Letter = 'B';
-                    break;
-                case var d when d >= 70.0:
-                    statistics.Letter = 'C';
-                    break;
-                case var d when d >= 60.0:
-                    statistics.Letter = 'D';
-                    break;
-                default:
-                    statistics.Letter = 'F';
-                    break;
-            }
+            statistics.CalculateStatistics(grades);
 
             return statistics;
-        }
-
-        public override string ToString()
-        {
-            var statistics = GetStatistics();
-
-            return $"The Book \"{Name}\" is in the category {category} and contains {statistics.GradeCount} grades.\n" +
-            $"Avarage grade: {statistics.Average:N2}\nMinimum grade: {statistics.Low:N2}\nMaximum grade: {statistics.High:N2}\nLetter grade: {statistics.Letter}";
-        }
-
-        private double CalculateSumOfGrades()
-        {
-            double sum = 0;
-
-            foreach (var grade in grades)
-            {
-                sum += grade;
-            }
-
-            return sum;
         }
     }
 }
