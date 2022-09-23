@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using Moq;
 
 
 namespace GradeBook.Tests
@@ -10,6 +11,10 @@ namespace GradeBook.Tests
         public void BookCalculatesStatistics()
         {
             //arrange
+            Mock<Book> mockBook = new Mock<Book>();
+            mockBook.Setup(x => x.Name).Returns("");
+
+
             var book = new InMemoryBook(new List<double> {89.1, 90.5, 77.3});
 
             //act
